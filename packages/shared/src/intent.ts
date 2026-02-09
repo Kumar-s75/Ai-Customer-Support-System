@@ -1,4 +1,4 @@
-import type { AgentType } from "./agent";
+import type { AgentType } from "./agent.js";
 
 export type IntentType = AgentType | "fallback";
 
