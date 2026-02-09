@@ -16,38 +16,55 @@ datasource db {
 }
 
 
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  conversations Conversation[]
+  orders        Order[]
+  createdAt     DateTime       @default(now())
+}
+
 model Conversation {
   id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
   messages  Message[]
+  summary   String?   // for context compaction (bonus)
+  createdAt DateTime  @default(now())
 }
 
 model Message {
-  id             String   @id @default(uuid())
+  id             String        @id @default(uuid())
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-
-  role    String
-  content String
-
-  createdAt DateTime @default(now())
+  role           String        // "user" | "assistant"
+  content        String
+  createdAt      DateTime      @default(now())
 }
 
 model Order {
-  id        String @id @default(uuid())
-  status    String
-  tracking  String
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  status    String    // pending | shipped | delivered | cancelled
+  createdAt DateTime  @default(now())
+  payments  Payment[]
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  amount    Float
+  status    String   // paid | refunded
+  createdAt DateTime @default(now())
+  invoice   Invoice?
 }
 
 model Invoice {
-  id           String @id @default(uuid())
-  refundStatus String
-  amount       Float
-}
-
-model User {
   id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
+  paymentId String   @unique
+  payment   Payment  @relation(fields: [paymentId], references: [id])
+  issuedAt  DateTime @default(now())
 }
