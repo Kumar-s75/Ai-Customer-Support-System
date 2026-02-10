@@ -1,135 +1,85 @@
-# Turborepo starter
+<img width="804" height="444" alt="image" src="https://github.com/user-attachments/assets/43b28e6b-3f61-4802-b487-fff14ba0cc04" /><img width="786" height="384" alt="image" src="https://github.com/user-attachments/assets/c57d7c96-7e7b-4079-bfb7-c3f7fcf03a8e" />⚙️ Setup Instructions
+1️⃣ Prerequisites
 
-This Turborepo starter is maintained by the Turborepo core team.
+Make sure you have the following installed:
 
-## Using this example
+Node.js ≥ 20.9.0 (recommended: Node 20 LTS)
 
-Run the following command:
+npm / pnpm (pnpm preferred for Turborepo)
 
-```sh
-npx create-turbo@latest
-```
+PostgreSQL (local or cloud)
 
-## What's inside?
+Git
+<img width="788" height="132" alt="image" src="https://github.com/user-attachments/assets/05f69e32-73ee-4a38-bac2-80c0c8a0d437" />
+2️⃣ Clone the Repository
+<img width="788" height="117" alt="image" src="https://github.com/user-attachments/assets/83a5a8fc-fab8-4293-adc2-730a13b58aba" />
+3️⃣ Install Dependencies (Monorepo)
 
-This Turborepo includes the following packages/apps:
+From the root of the repo:
+<img width="769" height="137" alt="image" src="https://github.com/user-attachments/assets/be52686e-c5e6-4266-9ecd-77894cb5e3f2" />
+This installs dependencies for:
 
-### Apps and Packages
+apps/api (Hono backend)
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+apps/web (Next.js frontend)
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+packages/db, packages/shared, etc.
+4️⃣ Environment Variables
 
-### Utilities
+Create a .env file inside packages/db (or root, depending on your setup):
+<img width="773" height="97" alt="image" src="https://github.com/user-attachments/assets/b47b4f4e-a78a-4480-8977-2ac65e8b3518" />
+5️⃣ Database Setup (Prisma)
 
-This Turborepo has some additional tools already setup for you:
+From packages/db:
+<img width="818" height="480" alt="image" src="https://github.com/user-attachments/assets/2022b12a-dfd0-417a-8a51-507e5be73db3" />
+6️⃣ Start the Backend (API)
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+From apps/api:
+<img width="772" height="510" alt="image" src="https://github.com/user-attachments/assets/57bef792-e880-4efa-b589-b3e1dbd8a49c" />
+7️⃣ Test Backend APIs (Optional but Recommended)
+Send chat message
+<img width="775" height="228" alt="image" src="https://github.com/user-attachments/assets/944284be-b4fa-479a-9ba3-97f2195ebe97" />
+Streaming endpoint (SSE)
+<img width="770" height="216" alt="image" src="https://github.com/user-attachments/assets/ebef1c0e-500a-4138-a307-8507249a3868" />
+8️⃣ Start the Frontend
 
-### Build
+From apps/web:
+<img width="786" height="384" alt="image" src="https://github.com/user-attachments/assets/a40d23c5-ab01-44be-8bf9-b086c8ceb288" />
+9️⃣ Frontend ↔ Backend Connection
 
-To build all apps and packages, run the following command:
+Ensure the frontend API calls point to:
+<img width="798" height="175" alt="image" src="https://github.com/user-attachments/assets/e30f20c2-0b2d-4e8f-8904-ed89e95cb96e" />
+10️⃣ Common Troubleshooting
 
-```
-cd my-turborepo
+Node version error
+<img width="804" height="444" alt="image" src="https://github.com/user-attachments/assets/e3f5b991-a3f0-4517-9154-0dc8f2357a3b" />
+Streaming not visible
+➡️ Use:
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+->Postman (SSE supported)
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+->curl with -N
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+->Browser EventSource
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+Demo  video-https://www.loom.com/share/6794ef682cbc467ca3e1fafe5b4a6a43
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
 
-### Develop
 
-To develop all apps and packages, run the following command:
 
-```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
 
-### Remote Caching
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
 
-```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
 
-```
-# With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
 
-# Without [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
