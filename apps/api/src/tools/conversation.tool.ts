@@ -1,5 +1,7 @@
+// tools/conversation.tool.ts
+
 import { prisma } from "@repo/db";
-import { compactMessages } from "../utils/contextCompaction.js";
+import { compactMessages } from "../utils/contextCompaction.ts";
 
 export const conversationTool = {
   async getContext(conversationId: string) {
@@ -21,22 +23,25 @@ export const conversationTool = {
       return [];
     }
 
-    const { summary, recent } = compactMessages(conversation.messages);
+    const { summary: newSummary, recent } = compactMessages(
+      conversation.messages
+    );
 
-    // Persist summary only if newly generated
-    if (summary && summary !== conversation.summary) {
+    const effectiveSummary = newSummary ?? conversation.summary;
+
+    if (newSummary && newSummary !== conversation.summary) {
       await prisma.conversation.update({
         where: { id: conversationId },
-        data: { summary },
+        data: { summary: newSummary },
       });
     }
 
     const context: { role: string; content: string }[] = [];
 
-    if (conversation.summary) {
+    if (effectiveSummary) {
       context.push({
         role: "system",
-        content: `Conversation summary: ${conversation.summary}`,
+        content: `Conversation summary: ${effectiveSummary}`,
       });
     }
 

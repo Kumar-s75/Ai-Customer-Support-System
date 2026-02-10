@@ -1,22 +1,35 @@
-import type { Message } from "@repo/db";
+type CompactableMessage = {
+  role: string;
+  content: string;
+  createdAt: Date;
+};
 
-const MAX_RECENT_MESSAGES = 10;
+export function compactMessages(
+  messages: CompactableMessage[]
+): {
+  summary: string | null;
+  recent: CompactableMessage[];
+} {
+  const MAX_RECENT = 6;
+  const SUMMARY_THRESHOLD = 12;
 
-export function compactMessages(messages: Message[]) {
-  if (messages.length <= MAX_RECENT_MESSAGES) {
+  if (messages.length <= SUMMARY_THRESHOLD) {
     return {
       summary: null,
-      recent: messages,
+      recent: messages.slice(-MAX_RECENT),
     };
   }
 
-  const older = messages.slice(0, -MAX_RECENT_MESSAGES);
-  const recent = messages.slice(-MAX_RECENT_MESSAGES);
+  const olderMessages = messages.slice(0, messages.length - MAX_RECENT);
+  const recentMessages = messages.slice(-MAX_RECENT);
 
-  const summary = older
+  const summary = olderMessages
     .map((m) => `${m.role}: ${m.content}`)
-    .join(" | ")
-    .slice(0, 1000); 
+    .join("\n")
+    .slice(0, 1000);
 
-  return { summary, recent };
+  return {
+    summary,
+    recent: recentMessages,
+  };
 }

@@ -1,4 +1,4 @@
-import { billingTool } from "../tools/billing.tool.js";
+import { billingTool } from "../tools/billing.tool.ts";
 
 interface BillingAgentInput {
   conversationId: string;

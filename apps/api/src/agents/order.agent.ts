@@ -1,4 +1,4 @@
-import { orderTool } from "../tools/order.tool.js";
+import { orderTool } from "../tools/order.tool.ts";
 
 interface OrderAgentInput {
   conversationId: string;

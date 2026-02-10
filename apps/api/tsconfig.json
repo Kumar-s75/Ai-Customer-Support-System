@@ -2,11 +2,20 @@
   "extends": "@repo/typescript-config/base.json",
 
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+
+    "target": "ES2022",
+    "lib": ["ES2022"],
+
+    "types": ["node"],
+    "skipLibCheck": true,
 
     "verbatimModuleSyntax": false,
-    "skipLibCheck": true
+    "moduleDetection": "auto",
+
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
 
   "include": ["src"]

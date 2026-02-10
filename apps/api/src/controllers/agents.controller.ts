@@ -1,11 +1,11 @@
 import type { Context } from "hono";
-import { AGENT_REGISTRY } from "../agents/registry.js";
+import { AGENT_REGISTRY } from "../agents/registry.ts";
 
 export function listAgentsController(c: Context) {
   return c.json(Object.values(AGENT_REGISTRY));
 }
 
-export function agentCapabilitiesController(c: Context) {
+export function getAgentCapabilitiesController(c: Context) {
   const type = c.req.param("type");
 
   const agent = AGENT_REGISTRY[type as keyof typeof AGENT_REGISTRY];

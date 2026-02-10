@@ -1,5 +1,5 @@
 import { serve } from "@hono/node-server";
-import { createApp } from "./app.js";
+import { createApp } from "./app.ts";
 
 const app = createApp();
 
@@ -10,4 +10,4 @@ serve({
   port,
 });
 
-console.log(`🚀 API running on http://localhost:${port}`);
+console.log(`🚀 API server is running on http://localhost:${port}`);

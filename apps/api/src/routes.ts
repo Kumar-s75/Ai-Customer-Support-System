@@ -1,32 +1,31 @@
 import type { Hono } from "hono";
-import { healthController } from "./controllers/health.controller.js";
+
+import { healthController } from "./controllers/health.controller.ts";
+import { sendMessageController } from "./controllers/chat.controller.ts";
+import { listAgentsController } from "./controllers/agents.controller.ts";
+import { getAgentCapabilitiesController } from "./controllers/agents.controller.ts";
 import {
   listConversationsController,
   getConversationController,
   deleteConversationController,
-} from "./controllers/conversation.controller.js";
-import {
-  sendMessageController,
-  sendMessageStreamController,
-} from "./controllers/chat.controller.js";
-import {
-  listAgentsController,
-  agentCapabilitiesController,
-} from "./controllers/agents.controller.js";
-import { rateLimitMiddleware } from "./middlewares/rateLimit.middleware.js";
+} from "./controllers/conversation.controller.ts";
 
 export function registerRoutes(app: Hono) {
-app.get("/api/health", healthController);
+  // Health
+  app.get("/health", healthController);
 
-app.get("/api/chat/conversations", listConversationsController);
-app.get("/api/chat/conversations/:id", getConversationController);
-app.get("/api/agents", listAgentsController);
-app.get("/api/agents/:type/capabilities", agentCapabilitiesController);
+  // Chat
+  app.post("/api/chat/messages", sendMessageController);
 
-app.delete("/api/chat/conversations/:id", deleteConversationController);
-app.post("/api/chat/messages", sendMessageController);
-app.post("/api/chat/messages/stream", sendMessageStreamController);
-app.use("/api/chat/*", rateLimitMiddleware);
-app.use("/api/chat/messages/stream", rateLimitMiddleware);
+  // Conversations
+  app.get("/api/chat/conversations", listConversationsController);
+  app.get("/api/chat/conversations/:id", getConversationController);
+  app.delete("/api/chat/conversations/:id", deleteConversationController);
 
+  // Agents
+  app.get("/api/agents", listAgentsController);
+  app.get(
+    "/api/agents/:type/capabilities",
+    getAgentCapabilitiesController
+  );
 }
