@@ -24,7 +24,7 @@ export default function ChatWindow({
 
     setIsSending(true);
 
-    // 1️⃣ Optimistically add user message
+
     setMessages((prev) => [
       ...prev,
       { role: "user", content },
@@ -72,7 +72,7 @@ export default function ChatWindow({
         flexDirection: "column",
       }}
     >
-      {/* Messages */}
+
       <div
         style={{
           flex: 1,
@@ -93,7 +93,7 @@ export default function ChatWindow({
         )}
       </div>
 
-      {/* Input */}
+   
       <MessageInput
         onSend={send}
         disabled={isSending}

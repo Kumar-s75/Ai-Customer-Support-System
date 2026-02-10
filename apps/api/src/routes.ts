@@ -13,7 +13,7 @@ import {
   listAgentsController,
   agentCapabilitiesController,
 } from "./controllers/agents.controller.js";
-
+import { rateLimitMiddleware } from "./middlewares/rateLimit.middleware.js";
 
 export function registerRoutes(app: Hono) {
 app.get("/api/health", healthController);
@@ -26,5 +26,7 @@ app.get("/api/agents/:type/capabilities", agentCapabilitiesController);
 app.delete("/api/chat/conversations/:id", deleteConversationController);
 app.post("/api/chat/messages", sendMessageController);
 app.post("/api/chat/messages/stream", sendMessageStreamController);
-  
+app.use("/api/chat/*", rateLimitMiddleware);
+app.use("/api/chat/messages/stream", rateLimitMiddleware);
+
 }
