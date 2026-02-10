@@ -1,4 +1,4 @@
-<img width="804" height="444" alt="image" src="https://github.com/user-attachments/assets/43b28e6b-3f61-4802-b487-fff14ba0cc04" /><img width="786" height="384" alt="image" src="https://github.com/user-attachments/assets/c57d7c96-7e7b-4079-bfb7-c3f7fcf03a8e" />⚙️ Setup Instructions
+⚙️ Setup Instructions
 1️⃣ Prerequisites
 
 Make sure you have the following installed:
@@ -64,6 +64,8 @@ Streaming not visible
 
 Demo  video-https://www.loom.com/share/6794ef682cbc467ca3e1fafe5b4a6a43
 
+Project structure--
+<img width="1995" height="2927" alt="image" src="https://github.com/user-attachments/assets/8693d5c4-3eec-4190-a686-0661003b88da" />
 
 
 
