@@ -10,9 +10,7 @@ interface BillingAgentInput {
 }
 
 export const billingAgent = {
-  async handle(input: BillingAgentInput) {
-    const { message } = input;
-
+  async handle({ message }: BillingAgentInput) {
     const orderId = extractOrderId(message);
 
     if (!orderId) {
@@ -23,41 +21,37 @@ export const billingAgent = {
       };
     }
 
-const payments = await billingTool.getPaymentsByOrder(orderId);
+    const payments = await billingTool.getPaymentsByOrder(orderId);
 
-if (!payments || payments.length === 0) {
-  return {
-    role: "assistant",
-    content: "I couldn’t find any payment records for this order.",
-  };
-}
+    if (!payments || payments.length === 0) {
+      return {
+        role: "assistant",
+        content: "I couldn’t find any payment records for this order.",
+      };
+    }
 
-const refunded = payments.find(p => p.status === "refunded");
+    const refunded = payments.find((p) => p.status === "refunded");
 
-if (refunded) {
-  return {
-    role: "assistant",
-    content: `Your payment of ₹${refunded.amount} has already been refunded.`,
-  };
-}
+    if (refunded) {
+      return {
+        role: "assistant",
+        content: `Your payment of ₹${refunded.amount} has already been refunded.`,
+      };
+    }
 
-// ✅ Explicitly assign after guard
-const latestPayment = payments[0];
+    const latestPayment = payments[0];
 
-if (!latestPayment) {
-  // This will realistically never happen, but satisfies TS
-  return {
-    role: "assistant",
-    content: "Unable to determine the payment status at the moment.",
-  };
-}
+    if (!latestPayment) {
+      return {
+        role: "assistant",
+        content: "Unable to determine the payment status at the moment.",
+      };
+    }
 
-return {
-  role: "assistant",
-  content: `Your payment of ₹${latestPayment.amount} was successful and no refunds are pending.`,
-};
-
-
+    return {
+      role: "assistant",
+      content: `Your payment of ₹${latestPayment.amount} was successful and no refunds are pending.`,
+    };
   },
 };
 

@@ -37,9 +37,7 @@ export const routerAgent = {
   async route(input: RouteInput) {
     const { conversationId, message } = input;
 
-    const recentMessages = await conversationTool.getRecentMessages(
-      conversationId
-    );
+    const context = await conversationTool.getContext(conversationId);
 
     const intent = classifyIntent(message);
 
@@ -48,42 +46,34 @@ export const routerAgent = {
         return orderAgent.handle({
           conversationId,
           message,
-          context: recentMessages,
+          context,
         });
 
       case "billing":
         return billingAgent.handle({
           conversationId,
           message,
-          context: recentMessages,
+          context,
         });
 
       case "support":
+      default:
         return supportAgent.handle({
           conversationId,
           message,
-          context: recentMessages,
+          context,
         });
-
-      default:
-        return {
-          role: "assistant",
-          content:
-            "I'm not sure how to help with that yet. Could you provide more details?",
-        };
     }
   },
 
-  
+
   async *routeStream(input: RouteInput) {
     const { conversationId, message } = input;
 
-  
     yield { type: "status", value: "Thinking..." };
 
-    const recentMessages = await conversationTool.getRecentMessages(
-      conversationId
-    );
+  
+    const context = await conversationTool.getContext(conversationId);
 
     const intent = classifyIntent(message);
 
@@ -96,7 +86,7 @@ export const routerAgent = {
         response = await orderAgent.handle({
           conversationId,
           message,
-          context: recentMessages,
+          context,
         });
         break;
 
@@ -104,7 +94,7 @@ export const routerAgent = {
         response = await billingAgent.handle({
           conversationId,
           message,
-          context: recentMessages,
+          context,
         });
         break;
 
@@ -112,11 +102,10 @@ export const routerAgent = {
         response = await supportAgent.handle({
           conversationId,
           message,
-          context: recentMessages,
+          context,
         });
     }
 
- 
     const tokens = response.content.split(" ");
 
     for (const token of tokens) {
@@ -124,11 +113,9 @@ export const routerAgent = {
       await delay(35);
     }
 
-    
     yield { type: "done", value: response.content };
   },
 };
-
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));

@@ -1,5 +1,3 @@
-import { conversationTool } from "../tools/conversation.tool.js";
-
 interface SupportAgentInput {
   conversationId: string;
   message: string;
@@ -11,10 +9,7 @@ interface SupportAgentInput {
 
 function generateSupportResponse(
   message: string,
-  context: {
-    summary: string | null;
-    recentContext: string;
-  }
+  contextText: string
 ): string {
   const text = message.toLowerCase();
 
@@ -30,31 +25,23 @@ function generateSupportResponse(
     return "You can reach our support team through this chat. Just let me know what you need help with.";
   }
 
-  // Fallback support response
+  // Context-aware fallback (simple but valid)
+  if (contextText.length > 0) {
+    return "Thanks for the details so far. Based on our conversation, let’s take the next step together.";
+  }
+
   return "Thanks for reaching out! I'm looking into your request and will guide you through the next steps.";
 }
 
-
 export const supportAgent = {
-  async handle(input: SupportAgentInput) {
-    const { conversationId, message, context } = input;
-
-    // 1️⃣ Load conversation summary (for future compaction)
-    const summary =
-      await conversationTool.getConversationSummary(conversationId);
-
-    // 2️⃣ Build lightweight context
-    const recentContext = context
-      .slice(0, 5)
-      .reverse()
+  async handle({ message, context }: SupportAgentInput) {
+    // Build a lightweight text context from injected messages
+    const contextText = context
+      .slice(-5)
       .map((m) => `${m.role}: ${m.content}`)
       .join("\n");
 
-    // 3️⃣ Basic FAQ / support logic (deterministic)
-    const response = generateSupportResponse(message, {
-      summary,
-      recentContext,
-    });
+    const response = generateSupportResponse(message, contextText);
 
     return {
       role: "assistant",

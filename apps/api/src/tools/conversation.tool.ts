@@ -1,25 +1,52 @@
 import { prisma } from "@repo/db";
+import { compactMessages } from "../utils/contextCompaction.js";
 
 export const conversationTool = {
-  async getRecentMessages(conversationId: string, limit = 10) {
-    return prisma.message.findMany({
-      where: { conversationId },
-      orderBy: { createdAt: "desc" },
-      take: limit,
-      select: {
-        role: true,
-        content: true,
-        createdAt: true,
+  async getContext(conversationId: string) {
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      include: {
+        messages: {
+          orderBy: { createdAt: "asc" },
+          select: {
+            role: true,
+            content: true,
+            createdAt: true,
+          },
+        },
       },
     });
-  },
 
-  async getConversationSummary(conversationId: string) {
-    const convo = await prisma.conversation.findUnique({
-      where: { id: conversationId },
-      select: { summary: true },
-    });
+    if (!conversation) {
+      return [];
+    }
 
-    return convo?.summary ?? null;
+    const { summary, recent } = compactMessages(conversation.messages);
+
+    // Persist summary only if newly generated
+    if (summary && summary !== conversation.summary) {
+      await prisma.conversation.update({
+        where: { id: conversationId },
+        data: { summary },
+      });
+    }
+
+    const context: { role: string; content: string }[] = [];
+
+    if (conversation.summary) {
+      context.push({
+        role: "system",
+        content: `Conversation summary: ${conversation.summary}`,
+      });
+    }
+
+    context.push(
+      ...recent.map((m) => ({
+        role: m.role,
+        content: m.content,
+      }))
+    );
+
+    return context;
   },
 };

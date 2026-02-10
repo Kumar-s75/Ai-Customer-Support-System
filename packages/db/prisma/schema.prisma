@@ -30,7 +30,7 @@ model Conversation {
   userId    String
   user      User      @relation(fields: [userId], references: [id])
   messages  Message[]
-  summary   String?   // for context compaction (bonus)
+  summary   String?   
   createdAt DateTime  @default(now())
 }
 
