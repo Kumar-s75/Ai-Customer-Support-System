@@ -1,4 +1,4 @@
-import type { Message } from "@prisma/client";
+import type { Message } from "@repo/db";
 
 const MAX_RECENT_MESSAGES = 10;
 
