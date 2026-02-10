@@ -9,6 +9,7 @@ import {
   getConversationController,
   deleteConversationController,
 } from "./controllers/conversation.controller.ts";
+import { streamChatController } from "./controllers/chat.stream.controller.ts";
 
 export function registerRoutes(app: Hono) {
   // Health
@@ -21,7 +22,8 @@ export function registerRoutes(app: Hono) {
   app.get("/api/chat/conversations", listConversationsController);
   app.get("/api/chat/conversations/:id", getConversationController);
   app.delete("/api/chat/conversations/:id", deleteConversationController);
-
+  app.post("/api/chat/stream", streamChatController);
+  
   // Agents
   app.get("/api/agents", listAgentsController);
   app.get(
