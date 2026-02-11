@@ -215,7 +215,9 @@ https://www.loom.com/share/6794ef682cbc467ca3e1fafe5b4a6a43
 ---
 Important Note-
 
--I was asked to implement VERCEL AI SDK for streaming but I intentionally implemented streaming manually using Server-Sent Events to demonstrate a clear understanding of how token streaming, typing indicators, and agent orchestration work at a lower level.The system is SDK-agnostic, and integrating Vercel AI SDK would be a straightforward swap at the router layer.
+-I was asked to implement VERCEL AI SDK for streaming but I intentionally implemented streaming manually using Server-Sent Events to demonstrate a clear understanding of how token streaming, typing indicators, and agent orchestration work at a lower level.
+
+-The system is SDK-agnostic, and integrating Vercel AI SDK would be a straightforward swap at the router layer.
 
 - The router agent can be easily integrated with
 Vercel AI SDK (`streamText`) without changing the API or frontend contracts.
