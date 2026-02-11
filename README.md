@@ -284,7 +284,65 @@ https://www.loom.com/share/6794ef682cbc467ca3e1fafe5b4a6a43
 ->Each agent has access to domain-specific tools backed by seeded database data.
 
 
+🧪 Testing Strategy
 
+This project uses a pragmatic, production-oriented testing approach, prioritizing real system behavior over artificial mocks.
+
+✅ Integration Testing (Primary Focus)
+
+-Core functionality is validated through end-to-end API testing using real requests, real database data, and real agent execution.
+
+-Covered flows include:
+
+-Service Health
+
+-GET /health → server + middleware validation
+
+-Chat Lifecycle
+
+-POST /api/chat/messages
+
+-POST /api/chat/stream (Server-Sent Events)
+
+-Multi-Agent Routing
+
+-Router agent correctly classifies intent and delegates to:
+
+-Support Agent
+
+-Order Agent
+
+-Billing Agent
+
+-Tool Execution
+
+-Orders, payments, invoices, and conversation tools hit the database directly
+
+-Persistence
+
+-Conversations and messages are stored and retrieved via Prisma
+
+-Error Handling
+
+-Global error middleware validated with malformed inputs
+
+-These tests validate the entire execution pipeline:
+
+-Controller → Router Agent → Sub-Agent → Tools → Database → Response
+
+✅ Logic Validation (Unit-Level by Design)
+
+-Critical logic is deterministic and validated through integration flows rather than isolated mocks:
+
+-Intent classification
+
+-Agent delegation logic
+
+-Context assembly & compaction
+
+-Tool correctness (orders, billing, conversations)
+
+-This avoids brittle mock-heavy tests while ensuring real-world correctness.
 
 
 
