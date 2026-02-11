@@ -213,3 +213,6 @@ https://www.loom.com/share/6794ef682cbc467ca3e1fafe5b4a6a43
 ![Project Structure](https://github.com/user-attachments/assets/8693d5c4-3eec-4190-a686-0661003b88da)
 
 ---
+Important Note-
+-I was asked to implement VERCEL AI SDK for streaming but I intentionally implemented streaming manually using Server-Sent Events to demonstrate a clear understanding of how token streaming, typing indicators, and agent orchestration work at a lower level.
+-The system is SDK-agnostic, and integrating Vercel AI SDK would be a straightforward swap at the router layer.
