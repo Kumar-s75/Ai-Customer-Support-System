@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { sendMessageStream } from "../../lib/api";
 import MessageInput from "./MessageInput";
 import { Message } from "../../types";
@@ -18,19 +18,21 @@ export default function ChatWindow({
 }: ChatWindowProps) {
   const [status, setStatus] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, status]);
 
   async function send(content: string) {
     if (!content || isSending) return;
 
     setIsSending(true);
 
-
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", content },
-    ]);
+    setMessages((prev) => [...prev, { role: "user", content }]);
 
     let assistantText = "";
+    let assistantIndex: number | null = null;
 
     try {
       await sendMessageStream(conversationId, content, (chunk) => {
@@ -42,15 +44,19 @@ export default function ChatWindow({
           assistantText += chunk.value;
 
           setMessages((prev) => {
-            // remove last assistant message if streaming
-            const withoutAssistant = prev.filter(
-              (m) => m.role !== "assistant"
-            );
+            const updated = [...prev];
 
-            return [
-              ...withoutAssistant,
-              { role: "assistant", content: assistantText },
-            ];
+            if (assistantIndex === null) {
+              assistantIndex = updated.length;
+              updated.push({ role: "assistant", content: assistantText });
+            } else {
+              updated[assistantIndex] = {
+                role: "assistant",
+                content: assistantText,
+              };
+            }
+
+            return updated;
           });
         }
 
@@ -60,6 +66,7 @@ export default function ChatWindow({
       });
     } finally {
       setIsSending(false);
+      setStatus(null);
     }
   }
 
@@ -72,7 +79,6 @@ export default function ChatWindow({
         flexDirection: "column",
       }}
     >
-
       <div
         style={{
           flex: 1,
@@ -81,8 +87,14 @@ export default function ChatWindow({
         }}
       >
         {messages.map((m, i) => (
-          <div key={i} style={{ marginBottom: 8 }}>
-            <b>{m.role}:</b> {m.content}
+          <div
+            key={i}
+            style={{
+              marginBottom: 8,
+              textAlign: m.role === "user" ? "right" : "left",
+            }}
+          >
+            <b>{m.role === "user" ? "You" : "Assistant"}:</b> {m.content}
           </div>
         ))}
 
@@ -91,13 +103,11 @@ export default function ChatWindow({
             {status}
           </div>
         )}
+
+        <div ref={bottomRef} />
       </div>
 
-   
-      <MessageInput
-        onSend={send}
-        disabled={isSending}
-      />
+      <MessageInput onSend={send} disabled={isSending} />
     </div>
   );
 }
